@@ -1,0 +1,293 @@
+import java.util.LinkedList;
+import java.util.Scanner;
+import javafx.application.Application;
+import static javafx.application.Application.launch;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
+import javax.swing.JOptionPane;
+class Record
+{
+private String fName;
+private String lName;
+private int idNumber;
+private int contactNumber;
+public Record() {}
+public Record(int idNumber, String fName, String lName, int contactNumber)
+{
+this.fName = fName;
+this.lName = lName;
+this.idNumber = idNumber;
+this.contactNumber = contactNumber;
+}
+public int getContactNumber() { return contactNumber; }
+public void setContactNumber(int contactNumber)
+{
+this.contactNumber = contactNumber;
+}
+public int getIdNumber() { return idNumber; }
+public void setIdNumber(int idNumber)
+{
+this.idNumber = idNumber;
+}
+public String getFirstName() { return fName; }
+public void setFirstName(String fName) { this.fName = fName; }
+public String getLastName() { return lName; }
+public void setLastName(String lName) { this.lName = lName; }
+
+public String toString()
+{
+return &quot;Person Details {&quot;
++ &quot;First name=&quot; + fName + &quot;, Last name=&quot; + lName + &quot;, idNumber=&quot; + idNumber
++ &quot;, contactNumber=&quot; + contactNumber + &#39;}&#39;;
+}
+}
+class PersonRecordManagement
+{
+LinkedList&lt;Record&gt; list;
+public PersonRecordManagement()
+{
+list = new LinkedList&lt;&gt;();
+}
+
+public void add(Record record)
+{
+if (!find(record.getIdNumber())) {
+list.add(record);
+}
+else {
+Alert a = new Alert(AlertType.NONE);
+a.setAlertType(AlertType.INFORMATION);
+a.setContentText(&quot;person id already exists in the Record list&quot;);
+a.show();
+}
+}
+
+public boolean find(int idNo)
+{
+
+for (Record l : list) {
+if (l.getIdNumber() == idNo)
+{
+Alert a = new Alert(AlertType.NONE);
+a.setAlertType(AlertType.INFORMATION);
+a.setContentText(l.toString());
+a.show();
+return true;
+}
+}
+return false;
+}
+
+public void delete(int idNo)
+
+{
+Record recordDel = null;
+for (Record ll : list) {
+if (ll.getIdNumber() == idNo) {
+recordDel = ll;
+}
+}
+if (recordDel == null) {
+Alert a = new Alert(AlertType.NONE);
+a.setAlertType(AlertType.ERROR);
+a.setContentText(&quot;Invalid person Id&quot;);
+a.show();
+}
+else {
+list.remove(recordDel);
+Alert a = new Alert(AlertType.NONE);
+a.setAlertType(AlertType.ERROR);
+a.setContentText(&quot;Successfully deleted the record&quot;);
+a.show();
+}
+}
+public Record findRecord(int idNumber)
+{
+for (Record l : list) {
+
+if (l.getIdNumber() == idNumber) {
+return l;
+}
+}
+return null;
+}
+
+public void update(int id,String fName,String lName,int contactNumber)
+{
+Scanner input=new Scanner(System.in);
+if (find(id)) {
+Record rec = findRecord(id);
+
+rec.setIdNumber(id);
+rec.setFirstName(fName);
+rec.setLastName(lName);
+rec.setContactNumber(contactNumber);
+Alert a = new Alert(AlertType.NONE);
+a.setAlertType(AlertType.INFORMATION);
+a.setContentText(&quot;Record Updated Successfully&quot;);
+a.show();
+}
+else {
+Alert a = new Alert(AlertType.NONE);
+a.setAlertType(AlertType.INFORMATION);
+a.setContentText(&quot;Record Not Found&quot;);
+a.show();
+}
+
+}
+
+public void display()
+{
+if (list.isEmpty()) {
+Alert a = new Alert(AlertType.NONE);
+a.setAlertType(AlertType.INFORMATION);
+a.setContentText(&quot;There is no records&quot;);
+a.show();
+}
+for (Record record : list) {
+Alert a = new Alert(AlertType.NONE);
+a.setAlertType(AlertType.INFORMATION);
+a.setContentText(record.toString());
+a.show();
+}
+}
+}
+public class Examp extends Application {
+Record record = new Record();
+PersonRecordManagement pr = new PersonRecordManagement();
+@Override
+public void start(Stage primaryStage) {
+Button btn = new Button();
+btn.setText(&quot;Say &#39;Hello World&#39;&quot;);
+btn.setOnAction(new EventHandler&lt;ActionEvent&gt;() {
+@Override
+public void handle(ActionEvent event) {
+System.out.println(&quot;Person Record Details!&quot;);
+}
+});
+StackPane root = new StackPane();
+root.getChildren().add(btn);
+// Scene scene = new Scene(root, 300, 250);
+GridPane grid = new GridPane();
+
+grid.setAlignment(Pos.CENTER);
+grid.setHgap(10);
+grid.setVgap(10);
+grid.setPadding(new Insets(25, 25, 25, 25));
+Text scenetitle = new Text(&quot;Person Record&quot;);
+scenetitle.setFont(Font.font(&quot;Tahoma&quot;, FontWeight.NORMAL, 20));
+grid.add(scenetitle, 0, 0, 2, 1);
+Label pid = new Label(&quot;Person Id:&quot;);
+grid.add(pid, 0, 1);
+TextField t1 = new TextField();
+grid.add(t1, 1, 1);
+Label pno = new Label(&quot;Person Phone Number:&quot;);
+grid.add(pno, 0, 2);
+TextField t2 = new TextField();
+grid.add(t2, 1, 2);
+Label fname = new Label(&quot;Person First Name: &quot;);
+grid.add(fname, 0, 3);
+TextField t3 = new TextField();
+grid.add(t3, 1, 3);
+Label lname = new Label(&quot;Person Last Name: &quot;);
+grid.add(lname, 0, 4);
+TextField t4= new TextField();
+grid.add(t4, 1, 4);
+
+Button b1=new Button(&quot;Add&quot;);
+grid.add(b1, 0, 6);
+Button b2=new Button(&quot;Delete&quot;);
+grid.add(b2, 1, 6);
+Button b3=new Button(&quot;Update&quot;);
+grid.add(b3, 0, 7);
+Button b4=new Button(&quot;Retrive Person by data&quot;);
+grid.add(b4, 1, 7);
+Button b5=new Button(&quot;Display Person&quot;);
+grid.add(b5, 0, 8);
+Button b6=new Button(&quot;Exit&quot;);
+grid.add(b6, 1, 8);
+
+final Text actiontarget = new Text();
+grid.add(actiontarget, 1, 6);
+Scene scene = new Scene(grid, 700, 675);
+primaryStage.setScene(scene);
+primaryStage.setTitle(&quot;Person Record&quot;);
+primaryStage.setScene(scene);
+primaryStage.show();
+b1.setOnAction(new EventHandler&lt;ActionEvent&gt;()
+{
+public void handle(ActionEvent e)
+{
+record = new Record(Integer.parseInt(t1.getText()), t3.getText(), t4.getText(),
+Integer.parseInt(t2.getText()));
+pr.add(record);
+Alert a = new Alert(AlertType.NONE);
+a.setAlertType(AlertType.INFORMATION);
+a.setContentText(record.toString());
+a.show();
+}
+});
+b2.setOnAction(new EventHandler&lt;ActionEvent&gt;()
+{
+public void handle(ActionEvent e)
+{
+pr.delete(Integer.parseInt(t1.getText()));
+
+}
+});
+b3.setOnAction(new EventHandler&lt;ActionEvent&gt;()
+{
+public void handle(ActionEvent e)
+{
+pr.update(Integer.parseInt(t1.getText()),t3.getText(), t4.getText(),
+Integer.parseInt(t2.getText()));
+}
+});
+b4.setOnAction(new EventHandler&lt;ActionEvent&gt;()
+{
+public void handle(ActionEvent e)
+{
+if (!(pr.find(Integer.parseInt(t1.getText())))) {
+Alert a = new Alert(AlertType.NONE);
+a.setAlertType(AlertType.INFORMATION);
+a.setContentText(&quot;Person id does not exist\n&quot;);
+a.show();
+}
+}
+});
+b5.setOnAction(new EventHandler&lt;ActionEvent&gt;()
+{
+public void handle(ActionEvent e)
+{
+pr.display();
+}
+});
+b6.setOnAction(new EventHandler&lt;ActionEvent&gt;()
+{
+public void handle(ActionEvent e)
+{
+System.exit(0);
+}
+});
+}
+public static void main(String[] args)
+{
+launch(args);
+}
+}
